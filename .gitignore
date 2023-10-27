@@ -8,6 +8,7 @@ __pycache__/
 
 # data for the dsp_project
 data/
+/data/
 
 # Distribution / packaging
 .Python
