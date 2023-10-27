@@ -22,18 +22,17 @@ def get_name(name: str):
     return {'Welcome to Product Rating': f'{name}'}
 
 # 3. Expose the prediction functionality, make a prediction from the passed
-#    JSON data and return the predicted Bank Note with the confidence
+#    JSON data and return the predicted results from the review text
 @app.post('/predict')
 def predict_rating(data: Rating):
-    # data = data.dict()
-    
+    data = data.dict()
     reviewText = data['reviewText']
     # overall=['overall']
     
    # print(classifier.predict([[overall]]))
     prediction = classifier.predict([reviewText])
     return {
-        'prediction': prediction
+        'prediction': prediction[0]
     }
 
 # 5. Run the API with uvicorn

@@ -16,7 +16,6 @@ def index():
 def get_name(name: str):
     return {'Welcome to Product Rating': f'{name}'}
 
-
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000
 if __name__ == '__main__':
