@@ -14,6 +14,7 @@ st.set_page_config(
 
 st.title("Amazon Reviews Prediction")
 st.sidebar.success("Select a page above.")
+st.sidebar.info("Write something here...")
 
 
 # Load your trained model
@@ -22,7 +23,7 @@ with open("../model/dsp_project_model.pkl", "rb") as model_file:
 
 # Create a select box for user to choose the input method
 input_choice = st.selectbox("How would you like to predict your Amazon Review?", 
-                            ["Enter Text Review", "Upload CSV File"])
+                            ["Enter Text Review", "Upload CSV File", "Generate Random Review"])
 
 # Use an empty container to display content based on user choice
 container = st.empty()
@@ -34,16 +35,8 @@ if input_choice == "Enter Text Review":
 
 # Add user input (e.g., a text box for entering a review)
     
-    random_review = st.button("Generate Random Review")
-    
-    
-    if random_review:
-        generated_review = random.choice(random_reviews)
 
-        review_text = st.text_area("Enter your review:", value=generated_review)
-
-    else:
-        review_text = st.text_area("Enter your review:")
+    review_text = st.text_area("Enter your review:")
 
     # # Create a "Clear Text" button
     # if st.button("Clear Text"):
@@ -84,3 +77,25 @@ elif input_choice == "Upload CSV File":
     #             st.write(f"Predicted Rating: {result['rating']}")
     #         else:
     #             st.write("Prediction failed. Please check your input and try again.")
+
+
+else:
+            
+    generated_review = random.choice(random_reviews)
+
+    review_text = st.text_area("Enter your review:", value=generated_review)
+    
+    random_review = st.button("Generate Random Review")
+
+    # Prepare the data to send to the FastAPI endpoint
+    input = {"review": review_text}
+
+    # Send a POST request to the FastAPI predict endpoint
+    response = requests.post(url="http://localhost:8000/predict/", json=input)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        prediction = response.json()
+        st.write(f"Predicted Rating: {prediction['rating']}")
+    else:
+        st.write("Prediction failed. Please check your input and try again.")
