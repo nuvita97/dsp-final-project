@@ -50,7 +50,7 @@ if input_choice == "Enter Text Review":
         input = {"review": review_text}
 
         # Send a POST request to the FastAPI predict endpoint
-        response = requests.post(url="http://localhost:8000/predict/", json=input)
+        response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
 
         # Check if the request was successful
         if response.status_code == 200:
@@ -91,7 +91,7 @@ else:
     input = {"review": review_text}
 
     # Send a POST request to the FastAPI predict endpoint
-    response = requests.post(url="http://localhost:8000/predict/", json=input)
+    response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
 
     # Check if the request was successful
     if response.status_code == 200:
