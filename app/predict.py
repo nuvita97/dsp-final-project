@@ -18,8 +18,8 @@ st.sidebar.info("Write something here...")
 
 
 # Load your trained model
-with open("../model/dsp_project_model.pkl", "rb") as model_file:
-    model = pickle.load(model_file)
+# with open("../model/dsp_project_model.pkl", "rb") as model_file:
+#     model = pickle.load(model_file)
 
 # Create a select box for user to choose the input method
 input_choice = st.selectbox("How would you like to predict your Amazon Review?", 
