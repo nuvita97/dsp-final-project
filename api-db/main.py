@@ -1,10 +1,25 @@
 from fastapi import FastAPI
+import psycopg2
 import pickle
 # from sklearn.feature_extraction.text import TfidfVectorizer
 from classes import Rating, Prediction
 from functions import clean_text
 
 app = FastAPI()
+
+# Make a connection to the database
+conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
+# Create a cursor
+cur = conn.cursor()
+# Define the query
+sql = """INSERT INTO inputs(image)
+        VALUES('this is test') RETURNING id;"""
+# Perform the query
+cur.execute(sql)
+# Commit and close
+conn.commit()     
+cur.close()
+
 
 # Load the trained model and TF-IDF vectorizer from the pickle file
 with open("../model/dsp_project_model.pkl", "rb") as model_file:
