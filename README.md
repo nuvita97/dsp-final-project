@@ -22,8 +22,14 @@ Provide step by step examples on how to get the development environment running.
 Explain how to use your code. Provide examples.
 
 ## File Descriptions
-
-Provide a list of the files in the repository with a brief description of each file.
+├── api-db
+├── app
+│   
+├── model
+project.
+├── .gitignore # This is a Git configuration file that specifies which files and directories should be ignored by Git.
+├── README.MD # This is a markdown file that typically includes information about our project, such as its purpose, how to install and use it, and how others can contribute.
+└── requirements.txt # This file contains a list of all Python libraries that our project depends on. Others can use this file to easily install all necessary libraries using pip.
 
 ## Results
 
