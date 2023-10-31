@@ -1,10 +1,8 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 import pickle
-from bs4 import BeautifulSoup
-from unidecode import unidecode
-import re
-from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.feature_extraction.text import TfidfVectorizer
+from classes import Rating, Prediction
+from functions import clean_text
 
 app = FastAPI()
 
@@ -15,24 +13,6 @@ with open("../model/dsp_project_model.pkl", "rb") as model_file:
 with open("../model/dsp_tfidf.pkl", "rb") as model_file:
     tfidf = pickle.load(model_file)   
 
-
-class Rating(BaseModel):
-    review: str
-
-class PredictionResult(BaseModel):
-    rating: float
-
-# Define the text preprocessing function
-def clean_text(text):
-    text = str(text).lower().replace('\\', '').replace('_', ' ')
-    text = re.sub(r'\S+@\S+', '', text)
-    text = re.sub(r'http\S+', '', text)
-    soup = BeautifulSoup(text, 'html.parser')
-    text = soup.get_text()
-    text = unidecode(text)
-    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
-    text = re.sub(r"(.)\\1{2,}", "\\1", text)
-    return text
 
 @app.post("/predict/")
 def predict(data: Rating):

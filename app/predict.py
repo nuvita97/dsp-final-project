@@ -36,7 +36,7 @@ if input_choice == "Enter Text Review":
 # Add user input (e.g., a text box for entering a review)
     
 
-    review_text = st.text_area("Enter your review:")
+    review_text = st.text_area("Enter your review:", height=200)
 
     # # Create a "Clear Text" button
     # if st.button("Clear Text"):
@@ -83,7 +83,7 @@ else:
             
     generated_review = random.choice(random_reviews)
 
-    review_text = st.text_area("Enter your review:", value=generated_review)
+    review_text = st.text_area("Enter your review:", value=generated_review, height=200)
     
     random_review = st.button("Generate Random Review")
 
