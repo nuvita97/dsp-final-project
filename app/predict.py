@@ -4,6 +4,10 @@ import requests
 import random
 from archive.utils import random_reviews
 
+
+API_URL = "http://127.0.0.1:8000/predict/"
+
+
 # Create a Streamlit app
 # st.title("ML Model Demo")
 st.set_page_config(
@@ -49,7 +53,7 @@ if input_choice == "Enter Text Review":
             input = {"review": review_text}
 
             # Send a POST request to the FastAPI predict endpoint
-            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
+            response = requests.post(url=API_URL, json=input)
 
             # Check if the request was successful
             if response.status_code == 200:
@@ -70,7 +74,7 @@ if input_choice == "Enter Text Review":
             input = {"review": review_text}
 
             # Send a POST request to the FastAPI predict endpoint
-            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
+            response = requests.post(url=API_URL, json=input)
 
             # Check if the request was successful
             if response.status_code == 200:
@@ -106,7 +110,7 @@ else:
     )
 
     # File upload component for CSV files
-    uploaded_file = container.file_uploader("Upload a CSV file", type=["csv"])
+    uploaded_file = st.file_uploader("Upload your CSV file here, recommended to use the sample file above.", type=["csv"])
 
     if uploaded_file is not None:
         # Read the CSV file
@@ -121,7 +125,7 @@ else:
 
             input_data = {"review": review_text}
 
-            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input_data)
+            response = requests.post(url=API_URL, json=input_data)
 
             prediction = response.json()
         

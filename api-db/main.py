@@ -3,7 +3,7 @@ import psycopg2
 import pickle
 # from sklearn.feature_extraction.text import TfidfVectorizer
 from classes import Rating, Prediction
-from functions import clean_text, save_prediction, get_prediction
+from functions import clean_text, save_prediction
 
 
 app = FastAPI()
@@ -31,7 +31,7 @@ def predict(data: Rating):
     rating = model.predict(text_vector)  # Use the predict method, not subscripting
 
     # Store the prediction
-    # prediction_id = save_prediction(review_text, rating.astype(int))
+    save_prediction(str(review_text), int(rating))
 
     return {"rating": rating[0]}  # Access the first element of the prediction
 

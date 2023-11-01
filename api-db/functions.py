@@ -35,23 +35,7 @@ def save_prediction(review, rating):
     conn.commit()     
     cur.close()
     # Return the prediction id
-    return prediction_id
 
+    # return prediction_id
 
-def get_prediction():
-    # Make a connection to the database
-    conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
-    # Create a cursor
-    cur = conn.cursor()
-    # Define the query
-    sql = """SELECT * FROM prediction ORDER BY id DESC;"""
-    # Perform the query
-    cur.execute(sql)
-    # Get the predictions
-    prediction = cur.fetchall()
-    # Commit and close
-    conn.commit()     
-    cur.close()
-    # Return the predictions
-    return prediction
 

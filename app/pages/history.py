@@ -5,18 +5,21 @@ from datetime import datetime, timedelta
 from archive.utils import convert_time_format
 
 
+API_URL = "http://127.0.0.1:8000/get_predict/"
+
+
 st.title("Predictions History")
 st.sidebar.success("Select a page above.")
 
 
 
 # Make an API GET request
-response = requests.get(url='http://127.0.0.1:8000/get_predict/')
+response = requests.get(url=API_URL)
 
 # Successful response
 data = response.json()  # Assuming the API returns JSON data
 
-columns_list = ["ID", "Review", "Rating", "Predict Time"]
+columns_list = ["ID", "Review", "Rating Prediction", "Predict Time"]
 # data.insert(0, columns_list)
 
 df = pd.DataFrame(data, columns=columns_list)
@@ -42,7 +45,7 @@ with col1:
 # Right column for end_date and end_time
 with col2:
     end_date = st.date_input("End Date", pd.Timestamp.now().date())
-    end_time = st.time_input("End Time")
+    end_time = st.time_input("End Time", pd.Timestamp.now())
 
 
 # Sidebar widgets for time filter
