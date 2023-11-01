@@ -22,7 +22,7 @@ st.sidebar.info("Write something here...")
 
 # Create a select box for user to choose the input method
 input_choice = st.selectbox("How would you like to predict your Amazon Review?", 
-                            ["Enter Text Review", "Upload CSV File", "Generate Random Review"])
+                            ["Enter Text Review", "Upload CSV File"])
 
 # Use an empty container to display content based on user choice
 container = st.empty()
@@ -32,33 +32,52 @@ container = st.empty()
 
 if input_choice == "Enter Text Review":
 
-# Add user input (e.g., a text box for entering a review)
-    
+    # Radio button to select the situation
+    situation = st.radio("Select your choice:", ("Enter your own review", "Generate random review"))
 
-    review_text = st.text_area("Enter your review:", height=200)
+    if situation == "Enter your own review":
 
-    # # Create a "Clear Text" button
-    # if st.button("Clear Text"):
-    #     # Clear the content of the text_review text area
-    #     review_text.empty()
-    
-    if st.button("Predict"):
+        # Add user input (e.g., a text box for entering a review)
+        review_text = st.text_area("Enter your review:", "", height=200)
+
+        if st.button("Predict"):
+
+            # Prepare the data to send to the FastAPI endpoint
+            input = {"review": review_text}
+
+            # Send a POST request to the FastAPI predict endpoint
+            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                prediction = response.json()
+                st.write(f"Predicted Rating: {prediction['rating']}")
+            else:
+                st.write("Prediction failed. Please check your input and try again.")
+
+    else:
         
+        if st.button("Generate Another Review"):
+            
+            generated_review = random.choice(random_reviews)
+            
+            review_text = st.text_area("Enter your review:", value=generated_review, height=200)
+    
+            # Prepare the data to send to the FastAPI endpoint
+            input = {"review": review_text}
 
-        # Prepare the data to send to the FastAPI endpoint
-        input = {"review": review_text}
+            # Send a POST request to the FastAPI predict endpoint
+            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
 
-        # Send a POST request to the FastAPI predict endpoint
-        response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
+            # Check if the request was successful
+            if response.status_code == 200:
+                prediction = response.json()
+                st.write(f"Predicted Rating: {prediction['rating']}")
+            else:
+                st.write("Prediction failed. Please check your input and try again.")
 
-        # Check if the request was successful
-        if response.status_code == 200:
-            prediction = response.json()
-            st.write(f"Predicted Rating: {prediction['rating']}")
-        else:
-            st.write("Prediction failed. Please check your input and try again.")
 
-elif input_choice == "Upload CSV File":
+else:
     # Add file upload component
     # uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
@@ -85,37 +104,37 @@ elif input_choice == "Upload CSV File":
     uploaded_file = container.file_uploader("Upload a CSV file", type=["csv"])
 
 
-    if st.button("Predict"):
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-            input_data = {"csvData": df.to_dict(orient="records")}
+    # if st.button("Predict"):
+    #     if uploaded_file is not None:
+    #         df = pd.read_csv(uploaded_file)
+    #         input_data = {"csvData": df.to_dict(orient="records")}
 
-            response = requests.post("http://localhost:8000/predict/", json=input_data)
+    #         response = requests.post("http://localhost:8000/predict/", json=input_data)
 
-            if response.status_code == 200:
-                result = response.json()
-                st.write(f"Predicted Rating: {result['rating']}")
-            else:
-                st.write("Prediction failed. Please check your input and try again.")
+    #         if response.status_code == 200:
+    #             result = response.json()
+    #             st.write(f"Predicted Rating: {result['rating']}")
+    #         else:
+    #             st.write("Prediction failed. Please check your input and try again.")
 
 
-else:
+# else:
             
-    generated_review = random.choice(random_reviews)
+#     generated_review = random.choice(random_reviews)
 
-    review_text = st.text_area("Enter your review:", value=generated_review, height=200)
+#     review_text = st.text_area("Enter your review:", value=generated_review, height=200)
     
-    random_review = st.button("Generate Random Review")
+#     random_review = st.button("Generate Random Review")
 
-    # Prepare the data to send to the FastAPI endpoint
-    input = {"review": review_text}
+#     # Prepare the data to send to the FastAPI endpoint
+#     input = {"review": review_text}
 
-    # Send a POST request to the FastAPI predict endpoint
-    response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
+#     # Send a POST request to the FastAPI predict endpoint
+#     response = requests.post(url="http://127.0.0.1:8000/predict/", json=input)
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        prediction = response.json()
-        st.write(f"Predicted Rating: {prediction['rating']}")
-    else:
-        st.write("Prediction failed. Please check your input and try again.")
+#     # Check if the request was successful
+#     if response.status_code == 200:
+#         prediction = response.json()
+#         st.write(f"Predicted Rating: {prediction['rating']}")
+#     else:
+#         st.write("Prediction failed. Please check your input and try again.")
