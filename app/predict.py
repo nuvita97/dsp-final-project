@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import random
-from archive.random import random_reviews
+from archive.utils import random_reviews
 
 # Create a Streamlit app
 # st.title("ML Model Demo")
@@ -14,6 +14,9 @@ st.set_page_config(
 st.title("Amazon Reviews Prediction")
 st.sidebar.success("Select a page above.")
 st.sidebar.info("Write something here...")
+
+
+
 
 
 # Load your trained model
@@ -83,7 +86,9 @@ else:
 
 
     # Sample data
-    sample_data = {'review': ['review_1', 'review_2', 'review_3']}
+    sample_data = {'review': ['This book is so good. Highly recommend!', 
+                            'Good for reading, but nothing specical.', 
+                            'This is so bad. I have never read a book this bad...']}
     sample_df = pd.DataFrame(sample_data)
 
     @st.cache_data
@@ -96,12 +101,37 @@ else:
     st.download_button(
         label="Download sample CSV file",
         data=csv,
-        file_name='sample.csv',
+        file_name='sample_reviews.csv',
         mime='text/csv',
     )
 
     # File upload component for CSV files
     uploaded_file = container.file_uploader("Upload a CSV file", type=["csv"])
+
+    if uploaded_file is not None:
+        # Read the CSV file
+        df = pd.read_csv(uploaded_file)
+
+        # Add a column for predictions
+        df["prediction"] = ""
+
+        # Iterate through the rows and make predictions
+        for index, row in df.iterrows():
+            review_text = row["review"]
+
+            input_data = {"review": review_text}
+
+            response = requests.post(url="http://127.0.0.1:8000/predict/", json=input_data)
+
+            prediction = response.json()
+        
+            prediction_value = prediction['rating']
+
+            df.at[index, "prediction"] = prediction_value
+
+        # Display the results in a table
+        st.write("Prediction Result")
+        st.dataframe(df[['review', 'prediction']])
 
 
     # if st.button("Predict"):

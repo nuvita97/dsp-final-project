@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 import re
+import requests
 import psycopg2
 
 
@@ -53,3 +54,4 @@ def get_prediction():
     cur.close()
     # Return the predictions
     return prediction
+

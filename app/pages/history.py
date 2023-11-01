@@ -2,16 +2,11 @@ import streamlit as st
 import pandas as pd
 import requests
 from datetime import datetime, timedelta
+from archive.utils import convert_time_format
+
 
 st.title("Predictions History")
 st.sidebar.success("Select a page above.")
-
-
-# Function to convert the time format
-def convert_time_format(original_time):
-    parsed_time = datetime.strptime(original_time, "%Y-%m-%dT%H:%M:%S.%f")
-    return parsed_time.strftime("%Y-%m-%d %H:%M:%S")
-
 
 
 

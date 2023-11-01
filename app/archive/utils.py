@@ -1,3 +1,9 @@
+from datetime import datetime
+import requests
+import streamlit as st
+
+
+# List of random reviews
 random_reviews = [
     "Scholarly to the extreme, this book assumes knowledge of political theory and of the Solidarity Movement. I had little of the former, none of the latter, and as a result the book did not make the impression on me it may have otherwise. I got the feeling that had I had the neccesary background the book would have been very thought-provoking and interesting.",
     "I'm not one of the sort of people who falls often for heart warming. I'm too bitter, too jaded... too educated to be able to gush openly about kindly regard for many things. This book, though, deserves that kind of praise.As you could gather from the blurbs from magazines, this is a hundred year old book that seeks to illustrate the lives of typical, everyday (not to say uninteresting) Americans. The book is short; it's stories are realistic. Thus, it gives great insight into our collective 'ancestry': a voice to the long-dead.I'm inclined to think that every time I mentally want to destroy America, in this book, again, could be found renewed hope and exploration. In this book one can find the stories of Lithuanians who set out to cross the ocean, of free black women finding for the first time life in a segregated south, of Greek pushcart workers who end up with $50,000 in the bank. More or less, these are the voices that give our community continuity.... and, well, I'm starting to ramble and make little sense....Just read the book....",
@@ -10,3 +16,9 @@ random_reviews = [
     "A colleague of mine recommended this book and I was pleasantly pleased to have read it. Unlike many of the pretentious, ivory tower books on leadership that seem to dominate the shelves, this one was written from the front lines. A super book for any boss, regardless of where they work or what title they hold.",
     "Kinsey makes a clinical contribution to the study of private warriors and military corporations. His attempt to define the various Private Military Firms that exist bogs the effort down and confuses when attempting to introduce an accepted typology. He acknowledges the difficulty in the exercise but falls victim to it nonetheless. Outside of this, he does a great job summarizing this history of freelancers through mercenaries to current day 'contractors'. He raises the need for greater oversight and regulatory guidelines for the entire industry. A solid contribution but retreads much of the same ground P.W. Singer covered in 2003 in Corporate Warriors."
 ]
+
+
+# Function to convert the time format
+def convert_time_format(original_time):
+    parsed_time = datetime.strptime(original_time, "%Y-%m-%dT%H:%M:%S.%f")
+    return parsed_time.strftime("%Y-%m-%d %H:%M:%S")
