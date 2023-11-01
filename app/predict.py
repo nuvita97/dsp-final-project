@@ -1,7 +1,6 @@
 import streamlit as st
+import pandas as pd
 import requests
-import json
-import pickle
 import random
 from archive.random import random_reviews
 
@@ -62,21 +61,42 @@ if input_choice == "Enter Text Review":
 elif input_choice == "Upload CSV File":
     # Add file upload component
     # uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+
+
+    # Sample data
+    sample_data = {'review': ['review_1', 'review_2', 'review_3']}
+    sample_df = pd.DataFrame(sample_data)
+
+    @st.cache_data
+    def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(sample_df)
+
+    st.download_button(
+        label="Download sample CSV file",
+        data=csv,
+        file_name='sample.csv',
+        mime='text/csv',
+    )
+
     # File upload component for CSV files
     uploaded_file = container.file_uploader("Upload a CSV file", type=["csv"])
 
-    # if st.button("Predict"):
-    #     if uploaded_file is not None:
-    #         df = pd.read_csv(uploaded_file)
-    #         input_data = {"csvData": df.to_dict(orient="records")}
 
-    #         response = requests.post("http://localhost:8000/predict/", json=input_data)
+    if st.button("Predict"):
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+            input_data = {"csvData": df.to_dict(orient="records")}
 
-    #         if response.status_code == 200:
-    #             result = response.json()
-    #             st.write(f"Predicted Rating: {result['rating']}")
-    #         else:
-    #             st.write("Prediction failed. Please check your input and try again.")
+            response = requests.post("http://localhost:8000/predict/", json=input_data)
+
+            if response.status_code == 200:
+                result = response.json()
+                st.write(f"Predicted Rating: {result['rating']}")
+            else:
+                st.write("Prediction failed. Please check your input and try again.")
 
 
 else:
