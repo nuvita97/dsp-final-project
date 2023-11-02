@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# data for the dsp_project
+data/
+/data/
+/.DS_Store/
+
 # Distribution / packaging
 .Python
 build/
