@@ -160,6 +160,8 @@ cython_debug/
 #.idea/
 
 # My folder
-api-db/
+apidb2/
 app/
 model/
+requirements.txt
+README.md
