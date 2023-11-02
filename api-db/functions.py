@@ -25,12 +25,12 @@ def save_prediction(review, rating):
     # Create a cursor
     cur = conn.cursor()
     # Define the query
-    sql = """INSERT INTO prediction (review, rating, time)
-                VALUES(%s, %s, now()) RETURNING id;"""
+    sql = """INSERT INTO prediction (review, rating, time, type)
+                VALUES(%s, %s, now(), %s) RETURNING id;"""
     # Perform the query
-    cur.execute(sql, (review, rating))
+    cur.execute(sql, (review, rating, 'App'))
     # Get the prediction id
-    prediction_id = cur.fetchone()[0]
+    cur.fetchone()[0]
     # Commit and close
     conn.commit()     
     cur.close()

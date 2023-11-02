@@ -1,20 +1,40 @@
 from datetime import datetime
-import requests
-import streamlit as st
 
 
 # List of random reviews
 random_reviews = [
-    "Scholarly to the extreme, this book assumes knowledge of political theory and of the Solidarity Movement. I had little of the former, none of the latter, and as a result the book did not make the impression on me it may have otherwise. I got the feeling that had I had the neccesary background the book would have been very thought-provoking and interesting.",
-    "I'm not one of the sort of people who falls often for heart warming. I'm too bitter, too jaded... too educated to be able to gush openly about kindly regard for many things. This book, though, deserves that kind of praise.As you could gather from the blurbs from magazines, this is a hundred year old book that seeks to illustrate the lives of typical, everyday (not to say uninteresting) Americans. The book is short; it's stories are realistic. Thus, it gives great insight into our collective 'ancestry': a voice to the long-dead.I'm inclined to think that every time I mentally want to destroy America, in this book, again, could be found renewed hope and exploration. In this book one can find the stories of Lithuanians who set out to cross the ocean, of free black women finding for the first time life in a segregated south, of Greek pushcart workers who end up with $50,000 in the bank. More or less, these are the voices that give our community continuity.... and, well, I'm starting to ramble and make little sense....Just read the book....",
-    "I hope this is one of many books just like this one! Heart-warming stories, you'll wish you'd known the person first-hand. I'm actually buying copies of this book for various friends that think the only history they need to know is on the History Channel!Well-written.",
-    "This book comes Highly recommended. It gives an historical overview that most books miss. Words from the common person, struggling to survive and thrive are inspiring .",
-    "Each story is engaging and interesting. The stories are about urban and rural life. The most wonderful aspect of these acccounts are how much in common we have as human beings and immigrants. The same struggles and hardships are experienced regardless of ethnicity, an eye opening read.",
-    "It shipped well, and the book was in good condition, it was obvious that it was used, but in the sense like a 2 year old school textbook. Good stuff all in all.I also like how it was annotated at certain points, it helped me find out a few things I could not get when I read through a couple of sections. I highly recommended this seller.",
-    "This guy doesn't have the foggiest clue how to be a good manager. For those of us that have worked for this horrible individual (who was fired fom his last railroad job) I say 'SAVE YOUR MONEY'. This is one of the biggest goofballs of all time!!! Ask anyone that has ever worked for him. You'll get the same response. He might as well have written a book about space travel or extra-terrestrials. He knows as much about that as he does good management.",
-    "What elements make up a terrific boss? M. David Dealy is VP of Transport for the Burlington Northern Santa Fe Railroad and co-author Andrew R. Thomas serves on the international business faculty of the University of Akron, so they blend scholarly savvy with applied business experience to analyze the question of elements which make exceptional bosses. These elements, outlined deftly in Defining The Really Great Boss, include high ethical standards, an ability to learn from mistakes, and the ability to approach their own superiors with action plans rather than complaints. Every boss should read Defining The Really Great Boss for insights on their own advancement.",
-    "A colleague of mine recommended this book and I was pleasantly pleased to have read it. Unlike many of the pretentious, ivory tower books on leadership that seem to dominate the shelves, this one was written from the front lines. A super book for any boss, regardless of where they work or what title they hold.",
-    "Kinsey makes a clinical contribution to the study of private warriors and military corporations. His attempt to define the various Private Military Firms that exist bogs the effort down and confuses when attempting to introduce an accepted typology. He acknowledges the difficulty in the exercise but falls victim to it nonetheless. Outside of this, he does a great job summarizing this history of freelancers through mercenaries to current day 'contractors'. He raises the need for greater oversight and regulatory guidelines for the entire industry. A solid contribution but retreads much of the same ground P.W. Singer covered in 2003 in Corporate Warriors."
+    "I couldn't believe I wasted hours on this book. It was excruciatingly dull, and the characters lacked depth. The plot felt disjointed, and I found myself struggling to finish it. I would strongly advise against reading this Kindle book.",
+    "One star is too generous for this book. It was a complete letdown. The story was poorly developed, and the writing was uninspiring. I couldn't find any redeeming qualities in this read.",
+    "This Kindle book was a total disappointment. The characters were unrelatable, and the plot was uninteresting. It felt like a never-ending slog, and I regret spending any money on it.",
+    "I had high hopes for this book, but it failed to deliver. The writing lacked finesse, and the plot was predictable. It was a frustrating read that left me thoroughly unsatisfied.",
+    "I wish I could get a refund for this book. It was a regrettable purchase. The story was poorly constructed, and I couldn't connect with the characters. I was left underwhelmed and disappointed.",
+    "This book was a major letdown. The characters were one-dimensional, and the plot was lackluster. I expected so much more, but it failed to meet my expectations.",
+    "I was thoroughly unimpressed with this book. The writing style was uninspiring, and the story lacked depth. I struggled to find any enjoyment in this read.",
+    "A forgettable story with no impact. The plot twists were uninspired, and the characters were forgettable. It was a disappointing experience from start to finish.",
+    "I kept hoping it would get better, but it never did. The story was a constant disappointment, and I was left wondering why I wasted my time on this Kindle book.",
+    "This book didn't live up to the hype. The writing was mediocre at best, and the plot failed to engage me. It was a forgettable story that left no impact.",
+
+    "I expected more from this Kindle book, but it offered an average reading experience. The story was middle-of-the-road, and the characters didn't leave a lasting impression. It wasn't remarkable but wasn't terrible either.",
+    "An underwhelming experience with no standout features. This book had the potential for more, but it failed to deliver consistently. It was an average read that didn't stand out but had some redeeming moments.",
+    "A Kindle book that failed to impress fully. It was an unremarkable read with no lasting impact, though it had its moments of intrigue. I found it difficult to connect with the story and characters consistently.",
+    "I wish I had spent my time on a better book, but this book had its moments. It didn't offer anything special or unique, but it had some redeeming qualities. It was an average story that left me somewhat indifferent.",
+    "This book didn't live up to my expectations, although it had some moments of promise. I had hoped for more depth and complexity, but it fell short at times. The story was forgettable but not without merit.",
+    "A predictable and unoriginal story, but it had some interesting moments. This book lacked the wow factor but had occasional flashes of brilliance. It was an average read that didn't leave a strong impression.",
+    "I wouldn't recommend this book to others, but it had its share of intriguing elements. It was an average plot with no remarkable features, but it had moments that held my interest. I struggled to find any redeeming qualities in this read.",
+    "I was left uninspired by this book, although it had its moments of intrigue. It was a forgettable story that failed to captivate my interest fully, but it had redeeming qualities that kept me reading.",
+    "This book was far from what I had hoped for, but it had its moments of intrigue. It was an average Kindle book with no standout qualities, but it had some redeeming qualities that kept me reading.",
+    "I expected more from this book, although it had its moments of intrigue. It was an average read with no remarkable plot twists, but it had redeeming qualities that made it worth the read. The characters were forgettable, and the writing style was uninspiring.",
+
+    "A gripping page-turner from start to finish! This book had me on the edge of my seat, and I couldn't put it down. The characters were relatable, and the plot twists were captivating.",
+    "This book changed my life. It's a must-read that left a lasting impact. The writing is simply beautiful, and the story touched my heart.",
+    "The characters were so relatable; I couldn't get enough. This Kindle book transported me to another world, and I was completely immersed in the story.",
+    "The plot twists kept me guessing until the very end. I laughed, I cried, and I couldn't have asked for a better book to read. It's a literary gem.",
+    "An emotional rollercoaster that tugged at my heartstrings. This book is a masterfully crafted story that will stay with you long after you finish it.",
+    "Couldn't stop reading, even in the wee hours of the morning. This Kindle book was a fantastic escape from reality, and I'm recommending it to all my friends.",
+    "A literary gem in the world of Kindle books. I was completely immersed in the world the author created, and it was an incredible journey of self-discovery.",
+    "This book was like a warm hug for the soul. It's an instant classic that I'll read again and again. A story that will touch your heart.",
+    "I wish I could give it more than five stars. This book will keep you hooked from the first page. It's a true masterpiece of storytelling.",
+    "This book was the highlight of my reading list. The characters were relatable, and the plot was filled with suspense. It was an absolute masterpiece.",
 ]
 
 

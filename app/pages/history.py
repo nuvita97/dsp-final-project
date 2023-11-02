@@ -19,7 +19,7 @@ response = requests.get(url=API_URL)
 # Successful response
 data = response.json()  # Assuming the API returns JSON data
 
-columns_list = ["ID", "Review", "Rating Prediction", "Predict Time"]
+columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
 # data.insert(0, columns_list)
 
 df = pd.DataFrame(data, columns=columns_list)
@@ -33,6 +33,7 @@ df["Predict Time"] = pd.to_datetime(df["Predict Time"])
 
 # Calculate the default start date (3 days ago)
 default_start_date = datetime.now() - timedelta(days=3)
+default_end_time = datetime.now() + timedelta(minutes=2)
 
 # Create a two-column layout
 col1, col2 = st.columns(2)
@@ -45,7 +46,7 @@ with col1:
 # Right column for end_date and end_time
 with col2:
     end_date = st.date_input("End Date", pd.Timestamp.now().date())
-    end_time = st.time_input("End Time", pd.Timestamp.now())
+    end_time = st.time_input("End Time", default_end_time)
 
 
 # Sidebar widgets for time filter
@@ -63,6 +64,7 @@ if response.status_code == 200:
     # Display the filtered data
     st.write("Filtered Data:")
     st.table(filtered_df)
+
 else:
     # Handle error if the API request fails
     st.error(f"API request failed with status code {response.status_code}")
