@@ -1,34 +1,38 @@
-# 1. Library imports
-import uvicorn
 from fastapi import FastAPI
 import psycopg2
+import pickle
 from classes import Rating
-from functions import clean_text
-from functions import tfidf
-from functions import model
-from functions import save_predictions
+from functions import clean_text, save_prediction
+
 
 app = FastAPI()
 
-@app.post("/predict")
+# Load the trained model and TF-IDF vectorizer from the pickle file
+with open("../model/dsp_project_model.pkl", "rb") as model_file:
+    model = pickle.load(model_file)
+with open("../model/dsp_project_tfidf_model.pkl", "rb") as model_file:
+    tfidf = pickle.load(model_file)   
+
+
+# Predict and save predictions
+@app.post("/predict/")
 def predict(data: Rating):
-    review_text = data.reviewText
+    review_text = data.review
     cleaned_text = clean_text(review_text)
     text_vector = tfidf.transform([cleaned_text])
     rating = model.predict(text_vector)
-    save_predictions(str(review_text), int(rating))
+    save_prediction(str(review_text), int(rating))
     return {"rating": rating[0]} 
 
+
+# Get all predictions
 @app.get('/get_predict/')
 def get_predict():
     conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
     cur = conn.cursor()
-    sql = """SELECT * FROM predictions;"""
+    sql = """SELECT * FROM prediction;"""
     cur.execute(sql)
     prediction = cur.fetchall()
     conn.commit()     
     cur.close()
     return prediction
-
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
