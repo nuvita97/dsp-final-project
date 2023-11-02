@@ -7,6 +7,11 @@ from archive.utils import convert_time_format
 
 GET_API_URL = "http://127.0.0.1:8000/get_predict/"
 
+st.set_page_config(
+    page_title="ML Legends",
+    page_icon="🤖",
+    layout="wide"
+)
 
 st.title("🕰️  Predictions History")
 st.sidebar.info("In this page, we will show all the filtered prediction history.")
@@ -41,7 +46,7 @@ with col2:
     end_date = st.date_input("End Date", pd.Timestamp.now().date())
     end_time = st.time_input("End Time", default_end_time)
 
-
+# 2 columns for filter Ratings & Type
 col3, col4 = st.columns(2)
 
 with col3:
