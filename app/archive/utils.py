@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import streamlit as st
 
 # List of random reviews
 random_reviews = [
@@ -42,3 +42,22 @@ random_reviews = [
 def convert_time_format(original_time):
     parsed_time = datetime.strptime(original_time, "%Y-%m-%dT%H:%M:%S.%f")
     return parsed_time.strftime("%Y-%m-%d %H:%M:%S")
+
+def predict_comment(score):
+    # Map prediction scores to comments
+    comments = {
+        1: "Not a recommended book.",
+        2: "An average read with room for improvement.",
+        3: "A good book worth considering.",
+        4: "A highly recommended read!",
+        5: "An outstanding book that you must read!"
+    }
+
+    # Display the comment based on the prediction score
+    if score in comments:
+        comment = comments[score]
+
+        # st.info("Predicted Rating: ", score)
+        st.info(comment)  # You can change this to st.warning or st.error if needed
+    else:
+        st.error("Invalid prediction score")
