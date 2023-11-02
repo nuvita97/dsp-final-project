@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 import re
-import requests
 import psycopg2
 
 
