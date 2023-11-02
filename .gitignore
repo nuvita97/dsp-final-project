@@ -9,6 +9,7 @@ __pycache__/
 # data for the dsp_project
 data/
 /data/
+/.DS_Store/
 
 # Distribution / packaging
 .Python
