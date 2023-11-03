@@ -1,7 +1,5 @@
 # Data Science in Production: Final Project
 
-## Introduction
-
 Welcome to the "Data Science in Production" project by Team “ML Legends”:
 
 - Stephanie Arthaud
@@ -9,6 +7,8 @@ Welcome to the "Data Science in Production" project by Team “ML Legends”:
 - Olanrewaju Adegoke
 - Christian Davison Dirisu
 - Viet Thai Nguyen
+
+## Introduction
 
 Our project focuses on the Sentiment Analysis of Kindle Book Reviews, aiming to classify them as Positive or Negative. We are utilizing the [Kindle Book Review Dataset], a rich collection of over 2 million reviews and associated metadata for a diverse range of Kindle books.
 

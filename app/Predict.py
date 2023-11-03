@@ -16,6 +16,7 @@ st.set_page_config(
 
 st.title("📖 Kindle Reviews Prediction")
 st.sidebar.info("📄 In this page, we will predict the Overall Rating of a Kindle book based on reviews of Amazon users.")
+st.sidebar.write("© A product of ML Legends")
 
 
 input_choice = st.selectbox("🧐 How would you like to predict your Amazon Review?", 

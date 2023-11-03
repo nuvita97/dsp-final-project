@@ -14,7 +14,8 @@ st.set_page_config(
 )
 
 st.title("🕰️  Predictions History")
-st.sidebar.info("In this page, we will show all the filtered prediction history.")
+st.sidebar.info("📄 In this page, we will show all the filtered prediction history.")
+st.sidebar.write("© A product of ML Legends")
 
 
 response = requests.get(url=GET_API_URL)
