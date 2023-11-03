@@ -18,7 +18,6 @@ st.title("📖 Kindle Reviews Prediction")
 st.sidebar.info("📄 In this page, we will predict the Overall Rating of a Kindle book based on reviews of Amazon users.")
 
 
-# Create a select box for user to choose the input method
 input_choice = st.selectbox("🧐 How would you like to predict your Amazon Review?", 
                             ["Enter Text Review", "Upload CSV File"])
 
