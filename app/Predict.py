@@ -11,13 +11,14 @@ POST_API_URL = "http://127.0.0.1:8000/predict/"
 st.set_page_config(
     page_title="ML Legends",
     page_icon="🤖",
+    layout="wide"
 )
 
 st.title("📖 Kindle Reviews Prediction")
 st.sidebar.info("📄 In this page, we will predict the Overall Rating of a Kindle book based on reviews of Amazon users.")
+st.sidebar.write("© A product of ML Legends")
 
 
-# Create a select box for user to choose the input method
 input_choice = st.selectbox("🧐 How would you like to predict your Amazon Review?", 
                             ["Enter Text Review", "Upload CSV File"])
 
