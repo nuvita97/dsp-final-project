@@ -46,18 +46,17 @@ def convert_time_format(original_time):
 def predict_comment(score):
     # Map prediction scores to comments
     comments = {
-        1: "Not a recommended book.",
-        2: "An average read with room for improvement.",
-        3: "A good book worth considering.",
-        4: "A highly recommended read!",
-        5: "An outstanding book that you must read!"
+        1: "👎 Not a recommended book.",
+        2: "😔 An average read with room for improvement.",
+        3: "🙄 A good book worth considering.",
+        4: "👍 A highly recommended read!",
+        5: "💯 An outstanding book that you must read!"
     }
 
     # Display the comment based on the prediction score
     if score in comments:
         comment = comments[score]
 
-        # st.info("Predicted Rating: ", score)
-        st.info(comment)  # You can change this to st.warning or st.error if needed
+        st.info(comment)  
     else:
         st.error("Invalid prediction score")

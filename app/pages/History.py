@@ -66,7 +66,7 @@ if response.status_code == 200:
     if selected_ratings:
         filtered_df = filtered_df[filtered_df['Predict Type'].isin(unique_types)]
 
-    st.write("Filtered Data")
+    st.write("🖨️ Filtered Data")
     st.table(filtered_df)
 
 else:

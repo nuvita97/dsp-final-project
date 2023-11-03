@@ -107,6 +107,6 @@ else:
 
             df.at[index, "prediction"] = prediction_value
 
-        st.write("Prediction Result")
+        st.write("🖨️ Prediction Result")
         st.dataframe(df[['review', 'prediction']])
 
