@@ -7,7 +7,7 @@ import psycopg2
 
 class Rating(BaseModel):
     review: str
-
+    
 
 # Define the text preprocessing function
 def clean_text(text):
