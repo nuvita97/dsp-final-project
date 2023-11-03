@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
 import pickle
-from classes import Rating
+from functions import Rating
 from functions import clean_text, save_prediction
 
 
