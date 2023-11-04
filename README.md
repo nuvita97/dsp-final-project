@@ -1,6 +1,6 @@
 # Data Science in Production: Final Project
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://192.168.1.40:8501/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://10.41.173.71:8501)
 
 Welcome to the "Data Science in Production" project by Team “ML Legends”:
 
