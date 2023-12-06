@@ -92,11 +92,12 @@ def predict_batch(api_url, review_texts):
 
 
 # Define a function to fetch predictions from the API
-# def get_predictions(api_url, start_date, end_date, selected_ratings, selected_types):
-def get_predictions(api_url, selected_ratings, selected_types):
+def get_predictions(api_url, start_date, end_date, start_time, end_time, selected_ratings, selected_types):
     params = {
-        # "start_date": start_date,
-        # "end_date": end_date,
+        "start_date": start_date,
+        "end_date": end_date,
+        "start_time": start_time,
+        "end_time": end_time,
         "selected_ratings": selected_ratings,
         "selected_types": selected_types
     }

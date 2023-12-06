@@ -48,9 +48,8 @@ with col4:
 
 
 if st.button("🖨️ Show History"):
-    # response = requests.get(url=GET_API_URL)
-    response = get_predictions(GET_API_URL, selected_ratings, selected_types)
-    # response = get_predictions(GET_API_URL, start_date, end_date, selected_ratings, selected_types)
+
+    response = get_predictions(GET_API_URL, start_date, end_date, start_time, end_time, selected_ratings, selected_types)
 
     columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
 
@@ -61,22 +60,3 @@ if st.button("🖨️ Show History"):
     df["Predict Time"] = pd.to_datetime(df["Predict Time"])
 
     st.table(df)
-
-        # filtered_df = df[(df["Predict Time"] >= pd.to_datetime(start_date.strftime("%Y-%m-%d") + " " + start_time.strftime("%H:%M:%S")))
-        #                 & (df["Predict Time"] <= pd.to_datetime(end_date.strftime("%Y-%m-%d") + " " + end_time.strftime("%H:%M:%S")))]
-
-        # # Filter the data based on selected ratings or show all data if none selected
-        # if selected_ratings:
-        #     filtered_df = filtered_df[filtered_df['Rating Prediction'].isin(selected_ratings)]
-
-        # # Filter the data based on selected ratings or show all data if none selected
-        # if selected_ratings:
-        #     filtered_df = filtered_df[filtered_df['Predict Type'].isin(selected_types)]
-
-        # st.table(filtered_df)
-    
-    # if response.status_code == 200:
-    # else:
-    #     st.error(f"API request failed with status code {response.status_code}")
-
-

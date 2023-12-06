@@ -36,28 +36,28 @@ def predict(data: List[Rating]):
 # Get predictions with filters
 @app.get('/get_filtered_predict/')
 def get_filtered_predict(
-    # start_date: str = Query(None),
-    # end_date: str = Query(None),
+    start_date: str = Query(None),
+    end_date: str = Query(None),
+    start_time: str = Query(None),
+    end_time: str = Query(None),
     selected_ratings: list = Query(None),
     selected_types: list = Query(None)
 ):
     conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
     cur = conn.cursor()
 
-    # Construct the base SQL query
     sql = """SELECT * FROM prediction WHERE 1=1"""
 
     # Add filters based on parameters
-    # if start_date:
-    #     sql += f" AND predict_time >= '{start_date} 00:00:00'"
-    # if end_date:
-    #     sql += f" AND predict_time <= '{end_date} 23:59:59'"
+    if start_date:
+        sql += f" AND time >= '{start_date} {start_time or '00:00:00'}'"
+    if end_date:
+        sql += f" AND time <= '{end_date} {end_time or '23:59:59'}'"
     if selected_ratings:
         sql += f" AND rating IN ({', '.join(map(str, selected_ratings))})"
     if selected_types:
         sql += f" AND type IN ({', '.join(map(lambda x: f'{x!r}', selected_types))})"
 
-    # Order by id
     sql += " ORDER BY id;"
 
     cur.execute(sql)
