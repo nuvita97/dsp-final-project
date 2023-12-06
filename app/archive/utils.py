@@ -1,5 +1,6 @@
 from datetime import datetime
 import streamlit as st
+import requests
 
 # List of random reviews
 random_reviews = [
@@ -43,6 +44,7 @@ def convert_time_format(original_time):
     parsed_time = datetime.strptime(original_time, "%Y-%m-%dT%H:%M:%S.%f")
     return parsed_time.strftime("%Y-%m-%d %H:%M:%S")
 
+
 def predict_comment(score):
     # Map prediction scores to comments
     comments = {
@@ -60,3 +62,51 @@ def predict_comment(score):
         st.info(comment)  
     else:
         st.error("Invalid prediction score")
+
+
+def predict_and_display(api_url, input):
+    response = requests.post(url=api_url, json=input)
+
+    if response.status_code == 200:
+        predictions = response.json().get("predictions", [])
+        if predictions:
+            for prediction in predictions:
+                st.success(f"Predicted Rating: {prediction['rating']}")
+        else:
+            st.warning("No predictions returned.")
+    else:
+        st.write("Prediction failed. Please check your input and try again.")
+
+    predict_comment(prediction['rating'])    
+
+
+def predict_batch(api_url, review_texts):
+    input_data = [{"review": text} for text in review_texts]
+    response = requests.post(url=api_url, json=input_data)
+
+    if response.status_code == 200:
+        predictions = response.json().get("predictions", [])
+        return [prediction.get("rating", None) for prediction in predictions]
+    else:
+        return [None] * len(review_texts)
+
+
+# Define a function to fetch predictions from the API
+def get_predictions(api_url, start_date, end_date, start_time, end_time, selected_ratings, selected_types):
+    params = {
+        "start_date": start_date,
+        "end_date": end_date,
+        "start_time": start_time,
+        "end_time": end_time,
+        "selected_ratings": selected_ratings,
+        "selected_types": selected_types
+    }
+
+    response = requests.get(api_url, params=params)
+
+    if response.status_code == 200:
+        predictions = response.json()
+        return predictions
+    else:
+        st.error("Failed to fetch predictions from the API.")
+        return None
