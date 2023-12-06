@@ -89,3 +89,23 @@ def predict_batch(api_url, review_texts):
         return [prediction.get("rating", None) for prediction in predictions]
     else:
         return [None] * len(review_texts)
+
+
+# Define a function to fetch predictions from the API
+# def get_predictions(api_url, start_date, end_date, selected_ratings, selected_types):
+def get_predictions(api_url, selected_ratings, selected_types):
+    params = {
+        # "start_date": start_date,
+        # "end_date": end_date,
+        "selected_ratings": selected_ratings,
+        "selected_types": selected_types
+    }
+
+    response = requests.get(api_url, params=params)
+
+    if response.status_code == 200:
+        predictions = response.json()
+        return predictions
+    else:
+        st.error("Failed to fetch predictions from the API.")
+        return None

@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import requests
 from datetime import datetime, timedelta
-from archive.utils import convert_time_format
+from archive.utils import convert_time_format, get_predictions
 
 
-GET_API_URL = "http://127.0.0.1:8000/get_predict/"
+# GET_API_URL = "http://127.0.0.1:8000/get_predict/"
+GET_API_URL = "http://127.0.0.1:8000/get_filtered_predict/"
 
 st.set_page_config(
     page_title="ML Legends",
@@ -47,34 +48,35 @@ with col4:
 
 
 if st.button("🖨️ Show History"):
-    response = requests.get(url=GET_API_URL)
-
-    data = response.json()
+    # response = requests.get(url=GET_API_URL)
+    response = get_predictions(GET_API_URL, selected_ratings, selected_types)
+    # response = get_predictions(GET_API_URL, start_date, end_date, selected_ratings, selected_types)
 
     columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
 
-    df = pd.DataFrame(data, columns=columns_list)
+    df = pd.DataFrame(response, columns=columns_list)
     df = df.set_index(df.columns[0])
 
     df["Predict Time"] = df["Predict Time"].apply(convert_time_format)
     df["Predict Time"] = pd.to_datetime(df["Predict Time"])
 
-    if response.status_code == 200:
-        
-        filtered_df = df[(df["Predict Time"] >= pd.to_datetime(start_date.strftime("%Y-%m-%d") + " " + start_time.strftime("%H:%M:%S")))
-                        & (df["Predict Time"] <= pd.to_datetime(end_date.strftime("%Y-%m-%d") + " " + end_time.strftime("%H:%M:%S")))]
+    st.table(df)
 
-        # Filter the data based on selected ratings or show all data if none selected
-        if selected_ratings:
-            filtered_df = filtered_df[filtered_df['Rating Prediction'].isin(selected_ratings)]
+        # filtered_df = df[(df["Predict Time"] >= pd.to_datetime(start_date.strftime("%Y-%m-%d") + " " + start_time.strftime("%H:%M:%S")))
+        #                 & (df["Predict Time"] <= pd.to_datetime(end_date.strftime("%Y-%m-%d") + " " + end_time.strftime("%H:%M:%S")))]
 
-        # Filter the data based on selected ratings or show all data if none selected
-        if selected_ratings:
-            filtered_df = filtered_df[filtered_df['Predict Type'].isin(selected_types)]
+        # # Filter the data based on selected ratings or show all data if none selected
+        # if selected_ratings:
+        #     filtered_df = filtered_df[filtered_df['Rating Prediction'].isin(selected_ratings)]
 
-        st.table(filtered_df)
+        # # Filter the data based on selected ratings or show all data if none selected
+        # if selected_ratings:
+        #     filtered_df = filtered_df[filtered_df['Predict Type'].isin(selected_types)]
 
-    else:
-        st.error(f"API request failed with status code {response.status_code}")
+        # st.table(filtered_df)
+    
+    # if response.status_code == 200:
+    # else:
+    #     st.error(f"API request failed with status code {response.status_code}")
 
 
