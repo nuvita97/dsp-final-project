@@ -1,5 +1,6 @@
 from datetime import datetime
 import streamlit as st
+import requests
 
 # List of random reviews
 random_reviews = [
@@ -43,6 +44,7 @@ def convert_time_format(original_time):
     parsed_time = datetime.strptime(original_time, "%Y-%m-%dT%H:%M:%S.%f")
     return parsed_time.strftime("%Y-%m-%d %H:%M:%S")
 
+
 def predict_comment(score):
     # Map prediction scores to comments
     comments = {
@@ -60,3 +62,19 @@ def predict_comment(score):
         st.info(comment)  
     else:
         st.error("Invalid prediction score")
+
+
+def predict_and_display(api_url, input):
+    response = requests.post(url=api_url, json=input)
+
+    if response.status_code == 200:
+        predictions = response.json().get("predictions", [])
+        if predictions:
+            for prediction in predictions:
+                st.success(f"Predicted Rating: {prediction['rating']}")
+        else:
+            st.warning("No predictions returned.")
+    else:
+        st.write("Prediction failed. Please check your input and try again.")
+
+    predict_comment(prediction['rating'])    

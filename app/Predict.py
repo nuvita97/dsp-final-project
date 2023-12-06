@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import random
-from archive.utils import random_reviews, predict_comment
+from archive.utils import random_reviews, predict_and_display
 
 
 POST_API_URL = "http://127.0.0.1:8000/predict/"
@@ -36,45 +36,26 @@ if input_choice == "Enter Text Review":
 
         if st.button("🔎 Predict"):
 
-            input = {"review": review_text}
-
-            response = requests.post(url=POST_API_URL, json=input)
-
-            if response.status_code == 200:
-                prediction = response.json()
-                st.success(f"Predicted Rating: {prediction['rating']}")
-            else:
-                st.write("Prediction failed. Please check your input and try again.")
-
-            predict_comment(prediction['rating'])
+            input_data = [{"review": review_text}]
+            predict_and_display(api_url=POST_API_URL, input=input_data)
 
     else:
         
         if st.button("Generate Another Review"):
             
             generated_review = random.choice(random_reviews)
-            
             review_text = st.text_area("Enter your review:", value=generated_review, height=200)
     
-            input = {"review": review_text}
-
-            response = requests.post(url=POST_API_URL, json=input)
-
-            if response.status_code == 200:
-                prediction = response.json()
-                st.success(f"Predicted Rating: {prediction['rating']}")
-            else:
-                st.write("Prediction failed. Please check your input and try again.")
-
-            predict_comment(prediction['rating'])
+            input_data = [{"review": review_text}]
+            predict_and_display(api_url=POST_API_URL, input=input_data)
             
 
 else:
 
-    sample_data = {'review': ['This book is so good. Highly recommend!', 
-                            'Good for reading, but nothing specical.', 
-                            'This is so bad. I have never read a book this bad...']}
-    sample_df = pd.DataFrame(sample_data)
+    sample_input = {'reviewText': ['This book is so good. Highly recommend!', 
+                                'Good for reading, but nothing specical.', 
+                                'This is so bad. I have never read a book this bad...']}
+    sample_df = pd.DataFrame(sample_input )
 
     @st.cache_data
     def convert_df(df):
@@ -96,7 +77,7 @@ else:
         df["prediction"] = ""
 
         for index, row in df.iterrows():
-            review_text = row["review"]
+            review_text = row["reviewText"]
 
             input_data = {"review": review_text}
 

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 import psycopg2
 import pickle
 from functions import Rating
@@ -18,23 +18,19 @@ with open("../model/dsp_project_tfidf_model.pkl", "rb") as model_file:
 # Predict and save predictions
 @app.post("/predict/")
 def predict(data: List[Rating]):
-    
-    predictions = []
-    review_texts = df["reviewText"].tolist()
-    for review_text in review_texts:
-        cleaned_text = clean_text(review_text)
-        text_vector = tfidf.transform([cleaned_text])
-        rating = model.predict(text_vector)
-        save_prediction(str(review_text), int(rating))
-        predictions.append({"review": review_text, "rating": rating[0]})
-    return predictions
 
-    # review_text = data.review
-    # cleaned_text = clean_text(review_text)
-    # text_vector = tfidf.transform([cleaned_text])
-    # rating = model.predict(text_vector)
-    # save_prediction(str(review_text), int(rating))
-    # return {"rating": rating[0]} 
+    reviews = [clean_text(d.review) for d in data]
+    text_vectors = tfidf.transform(reviews)
+    ratings = model.predict(text_vectors)
+
+    predictions = []
+    for i in range(len(data)):
+        review_text = data[i].review
+        rating = int(ratings[i])
+        save_prediction(str(review_text), rating)
+        predictions.append({"review": review_text, "rating": rating})
+
+    return {"predictions": predictions}
 
 
 # Get all predictions
@@ -42,7 +38,7 @@ def predict(data: List[Rating]):
 def get_predict():
     conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
     cur = conn.cursor()
-    sql = """SELECT * FROM prediction;"""
+    sql = """SELECT * FROM prediction ORDER BY id;"""
     cur.execute(sql)
     prediction = cur.fetchall()
     conn.commit()     
