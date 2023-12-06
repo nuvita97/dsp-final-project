@@ -10,6 +10,31 @@ __pycache__/
 data/
 /data/
 /.DS_Store/
+/Folder_A_Test
+/Folder_A_errors
+/Folder_B_ingested
+/Folder_C_ingested
+/Folder_C_test
+/model/Folder_A_clean
+/model/Kindle_Store_5_2018.csv
+/model/Kindle_Store_10lines.csv
+
+# Airflow
+/airflow-env
+/dags/prediction_job.py
+/logs
+/airflow-webserver.pid
+airflow.cfg
+airflow.db
+processed_files.txt
+standalone_admin_password.txt
+webserver_config.py
+
+# Python Scripts
+/model/count200char.py
+/model/data_splitter_errors.py
+/model/data_splitter.py
+/model/json-to-csv.py
 
 # Distribution / packaging
 .Python
