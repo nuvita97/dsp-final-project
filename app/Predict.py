@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import random
-from archive.utils import random_reviews, predict_and_display
+from archive.utils import random_reviews, predict_and_display, predict_batch
 
 
 POST_API_URL = "http://127.0.0.1:8000/predict/"
@@ -52,7 +52,7 @@ if input_choice == "Enter Text Review":
 
 else:
 
-    sample_input = {'reviewText': ['This book is so good. Highly recommend!', 
+    sample_input = {'review': ['This book is so good. Highly recommend!', 
                                 'Good for reading, but nothing specical.', 
                                 'This is so bad. I have never read a book this bad...']}
     sample_df = pd.DataFrame(sample_input )
@@ -74,21 +74,29 @@ else:
 
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
-        df["prediction"] = ""
-
-        for index, row in df.iterrows():
-            review_text = row["reviewText"]
-
-            input_data = {"review": review_text}
-
-            response = requests.post(url=POST_API_URL, json=input_data)
-
-            prediction = response.json()
-        
-            prediction_value = prediction['rating']
-
-            df.at[index, "prediction"] = prediction_value
+        df["prediction"] = predict_batch(POST_API_URL, df["review"].tolist())
 
         st.write("🖨️ Prediction Result")
         st.dataframe(df[['review', 'prediction']])
+
+
+
+        # df = pd.read_csv(uploaded_file)
+        # df["prediction"] = ""
+
+        # for index, row in df.iterrows():
+        #     review_text = row["review"]
+
+        #     input_data = {"review": review_text}
+
+        #     response = requests.post(url=POST_API_URL, json=input_data)
+
+        #     prediction = response.json()
+        
+        #     prediction_value = prediction['rating']
+
+        #     df.at[index, "prediction"] = prediction_value
+
+        # st.write("🖨️ Prediction Result")
+        # st.dataframe(df[['review', 'prediction']])
 

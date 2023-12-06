@@ -78,3 +78,14 @@ def predict_and_display(api_url, input):
         st.write("Prediction failed. Please check your input and try again.")
 
     predict_comment(prediction['rating'])    
+
+
+def predict_batch(api_url, review_texts):
+    input_data = [{"review": text} for text in review_texts]
+    response = requests.post(url=api_url, json=input_data)
+
+    if response.status_code == 200:
+        predictions = response.json().get("predictions", [])
+        return [prediction.get("rating", None) for prediction in predictions]
+    else:
+        return [None] * len(review_texts)
