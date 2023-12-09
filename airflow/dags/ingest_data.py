@@ -1,38 +1,30 @@
-import logging
-from datetime import datetime
 from datetime import timedelta
-
-import pandas as pd
+import os
+import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
+import ge_valid as ge
 
 
 @dag(
-    dag_id='ingest_data',
-    description='Ingest data from a file to another DAG',
-    tags=['dsp', 'data_ingestion'],
-    schedule=timedelta(minutes=2),
-    start_date=days_ago(n=0, hour=1)
+    dag_id="validate_data",
+    description="Validate data from a file to agreat_expectations initnother DAG",
+    tags=["dsp", "validation"],
+    schedule=timedelta(minutes=1),
+    start_date=days_ago(n=0, hour=0),
 )
-def ingest_data():
+def validate_data():
     @task
-    def get_data_to_ingest_from_local_file() -> pd.DataFrame:
-        nb_rows = 5
-        filepath = 'input_data/power_plants.csv'
-        input_data_df = pd.read_csv(filepath)
-        logging.info(f'Extract {nb_rows} rows from the file {filepath}')
-        data_to_ingest_df = input_data_df.sample(n=nb_rows)
-        return data_to_ingest_df
+    def get_validation() -> None:
+        input = ("data/folder_A")
+        output_success = ("data/folder_C")
+        output_fail = ("data/folder_B")
+        file_pattern = os.path.join(input, "*.csv")
+        file_paths = glob.glob(file_pattern)
 
-    @task
-    def save_data(data_to_ingest_df: pd.DataFrame) -> None:
-        filepath = f'output_data/{datetime.now().strftime("%Y-%M-%d_%H-%M-%S")}.csv'
-        logging.info(f'Ingesting data to the file: {filepath}')
-        data_to_ingest_df.to_csv(filepath, index=False)
+        for file_path in file_paths:
+            ge.process_file(file_path, output_fail, output_success)
 
-    # Task relationships
-    data_to_ingest = get_data_to_ingest_from_local_file()
-    save_data(data_to_ingest)
+    get_validation()
 
-
-ingest_data_dag = ingest_data()
+validate_data_dag = validate_data()
