@@ -10,7 +10,8 @@ from airflow.operators.python import ShortCircuitOperator
 from airflow.sensors.external_task import ExternalTaskSensor
 
 
-POST_API_URL = "http://localhost:8000/predict/"
+# POST_API_URL = "http://localhost:8000/predict/"
+POST_API_URL= "http://host.docker.internal:8000/predict/"
 GET_API_URL = "http://localhost:8000/get_predict/"
 
 @dag(
@@ -38,7 +39,8 @@ def predict_every_minute_dag():
 
     @task()
     def merge_csv_files():
-        folder_path = "data/folder_E"
+        logging.info(os.getcwd())
+        folder_path = "/opt/data/folder_E"
         df_list = []
 
         for file in os.listdir(folder_path):
