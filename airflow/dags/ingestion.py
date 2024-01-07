@@ -14,7 +14,7 @@ from datetime import datetime
 @dag(
     dag_id="ingest_data",
     description="Validate data from a file by great_expectations",
-    tags=["dsp", "validation"],
+    tags=["dsp", "validate", "alert"],
     schedule=timedelta(minutes=2),
     start_date=days_ago(n=0, hour=1)
     # catchup=False
@@ -24,11 +24,12 @@ from datetime import datetime
 def ingestion():
     @task
     def read_file() -> pd.DataFrame:
-        input_path = 'data/folder_D'
+        input_path = 'data/folder_E'
         file_pattern = os.path.join(input_path, '*.csv')
 
         # Randomly select a file path
         file_paths = glob.glob(file_pattern)
+        logging.info(file_paths)
         file_path = random.choice(file_paths)
         df = pd.read_csv(file_path)
 
@@ -40,6 +41,27 @@ def ingestion():
 
         return df
     
+    # @task
+    # def validate_file(df):
+    #     # df, file_name = data
+    #     df_ge = ge.from_pandas(df)
+    #     expectation_suite = ge.dataset.util.create_expectation_suite()
+    #     expectation_suite.add_expectation({
+    #         "expectation_type": "expect_column_values_to_not_be_null",
+    #         "kwargs": {
+    #             "column": "reviewText"
+    #         }
+    #     })
+    #     df_ge.validate(expectation_suite)
+    #     return df, file_name
+    
+    # @task
+    # def split_file(data):
+    #     df, file_name = data
+    #     df_null = df[df['reviewText'].isnull()]
+    #     df_not_null = df[df['reviewText'].notnull()]
+    #     return df_null, df_not_null, file_name
+
     @task
     def save_file(df: pd.DataFrame) -> None:
         # Get current time and date

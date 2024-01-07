@@ -38,7 +38,7 @@ def predict_every_minute_dag():
 
     @task()
     def merge_csv_files():
-        folder_path = "data/folder_C"
+        folder_path = "data/folder_E"
         df_list = []
 
         for file in os.listdir(folder_path):
@@ -51,29 +51,25 @@ def predict_every_minute_dag():
         return merged_df
 
 
-    # @task()
-    # def make_predictions(merged_df):
-    #     review_texts = merged_df["reviewText"].tolist()
-    #     input_data = [{"review": text} for text in review_texts]
-    #     logging.info('Before calling API')
-    #     try:
-    #         response = requests.post(url=POST_API_URL, json=input_data)
-    #         logging.info(f"FastAPI Response: {response.text}")
-    #     except Exception as e:
-    #         logging.error(f"Error calling FastAPI: {str(e)}")
-    #         raise
+    @task()
+    def make_predictions(merged_df):
+        review_texts = merged_df["reviewText"].tolist()
+        input_data = [{"review": text} for text in review_texts]
+        logging.info('Before calling API')
+        response = requests.post(url=POST_API_URL, json=input_data)
+        logging.info(f"FastAPI Response: {response.text}")
 
-    @task
-    def get_predictions():
-        response = requests.get(GET_API_URL)
-        columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
-        df = pd.DataFrame(response, columns=columns_list)
-        df.to_csv('data/folder_B/test_get_predict_files.csv')
+    # @task
+    # def get_predictions():
+    #     response = requests.get(GET_API_URL)
+    #     columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
+    #     df = pd.DataFrame(response, columns=columns_list)
+    #     df.to_csv('data/folder_B/test_get_predict_files.csv')
 
 
     merged_df = merge_csv_files()
-    # make_predictions(merged_df)
-    get_predictions()
+    make_predictions(merged_df)
+    # get_predictions()
 
     # merged_df >> make_predictions_task
     # wait_for_new_files >> merge_csv_files() >> save_data(merged_df)
