@@ -1,0 +1,16 @@
+{
+    "expectation_suite_name": "csv_expectations",
+    "expectations": [
+
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "reviewText"
+        }
+      }
+
+    ],
+    "meta": {
+      "great_expectations_version": "0.18.3"
+    }
+}

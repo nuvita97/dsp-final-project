@@ -10,6 +10,9 @@ __pycache__/
 data/
 **/.DS_Store
 
+# Airflow
+airflow/airflow.db
+
 # Distribution / packaging
 .Python
 build/
