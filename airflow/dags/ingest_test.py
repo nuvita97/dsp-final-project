@@ -18,7 +18,7 @@ def ingest_data():
     @task
     def get_data_to_ingest_from_local_file() -> pd.DataFrame:
         nb_rows = 20
-        filepath = 'data/input_data/power_plants.csv'
+        filepath = '/opt/data/input_data/power_plants.csv'
         input_data_df = pd.read_csv(filepath)
         logging.info(f'Extract {nb_rows} rows from the file {filepath}')
         data_to_ingest_df = input_data_df.sample(n=nb_rows)
@@ -26,7 +26,7 @@ def ingest_data():
 
     @task
     def save_data(data_to_ingest_df: pd.DataFrame) -> None:
-        filepath = f'data/output_data/{datetime.now().strftime("%Y-%M-%d_%H-%M-%S")}.csv'
+        filepath = f'/opt/data/output_data/{datetime.now().strftime("%Y-%M-%d_%H-%M-%S")}.csv'
         logging.info(f'Ingesting data to the file: {filepath}')
         data_to_ingest_df.to_csv(filepath, index=False)
 

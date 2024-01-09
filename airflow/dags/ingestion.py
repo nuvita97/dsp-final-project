@@ -24,7 +24,7 @@ from datetime import datetime
 def ingestion():
     @task
     def read_file() -> pd.DataFrame:
-        input_path = 'data/folder_E'
+        input_path = '/opt/data/folder_E'
         file_pattern = os.path.join(input_path, '*.csv')
 
         # Randomly select a file path
@@ -69,7 +69,7 @@ def ingestion():
         timestamp = now.strftime("%Y%m%d_%H%M%S")
 
         # Include the timestamp in the filename
-        file_path = f'data/folder_C/{timestamp}.csv'
+        file_path = f'/opt/data/folder_C/{timestamp}.csv'
         logging.info(f'Ingesting data to the file: {file_path}')
         
         df.to_csv(file_path, index=False)
