@@ -9,7 +9,9 @@ __pycache__/
 # data for the dsp_project
 data/
 /data/
-/.DS_Store/
+.DS_Store
+*/.DS_Store/*
+
 /Folder_A_Test
 /Folder_A_errors
 /Folder_B_ingested
