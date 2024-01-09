@@ -7,6 +7,7 @@ from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 import pandas as pd
 import great_expectations as ge
+import psycopg2
 
 
 @dag(
@@ -31,7 +32,9 @@ def ingestion():
         file_path = random.choice(file_paths)
 
         logging.info(file_path)
+
         df = pd.read_csv(file_path)
+        df['file_name'] = os.path.basename(file_path)
 
         # Remove file
         # os.remove(file_path)
@@ -54,12 +57,12 @@ def ingestion():
             if not batch.validate().success:
                 df.at[index, 'validated'] = 'null_data'
 
-        logging.info(df['validated'])
+        logging.info(df[['file_name', 'validated']])
 
         return df
 
 
-    # @task
+    ### @task
     # def alert_errors()
 
 
@@ -86,9 +89,22 @@ def ingestion():
         return df_invalid
 
 
-    # @task
-    # def save_logs(df_invalid)
-    # Write logs to Postgres
+    @task
+    def save_logs(df_invalid):
+        for index, row in df_invalid.iterrows():
+            file_name = row['file_name']
+            review_text = row['reviewText']
+            problem = row['validated']
+
+            # Write problematic logs to Postgres
+            conn = psycopg2.connect("host=host.docker.internal port=5432 dbname=amazon-reviews user=postgres password=password")
+            cur = conn.cursor()
+            sql = """INSERT INTO problem (file_name, review_text, problem, time)
+                    VALUES(%s, %s, %s, now()) RETURNING id;"""
+            cur.execute(sql, (file_name, review_text, problem))
+            cur.fetchone()[0]
+            conn.commit()     
+            cur.close()
 
 
     # Task relationships
@@ -96,7 +112,7 @@ def ingestion():
     validated_df = validate_data(df)
     # alert_errors(validated_df)
     invalid_df = split_file(validated_df)
-    # save_logs(invalid_df)
+    save_logs(invalid_df)
 
 
 ingestion_dag = ingestion()
