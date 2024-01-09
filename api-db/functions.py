@@ -7,7 +7,7 @@ import psycopg2
 
 class Rating(BaseModel):
     review: str
-    
+    predict_type: str
 
 # Define the text preprocessing function
 def clean_text(text):
@@ -25,12 +25,12 @@ def clean_text(text):
 
 
 # Store prediction into DB
-def save_prediction(review, rating):
+def save_prediction(review, rating, type):
     conn = psycopg2.connect("dbname=amazon-reviews user=postgres password=password")
     cur = conn.cursor()
     sql = """INSERT INTO prediction (review, rating, time, type)
                 VALUES(%s, %s, now(), %s) RETURNING id;"""
-    cur.execute(sql, (review, rating, 'App'))
+    cur.execute(sql, (review, rating, type))
     cur.fetchone()[0]
     conn.commit()     
     cur.close()

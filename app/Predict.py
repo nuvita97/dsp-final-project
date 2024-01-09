@@ -1,11 +1,8 @@
 import streamlit as st
 import pandas as pd
-import requests
 import random
 from archive.utils import random_reviews, predict_and_display, predict_batch
-
-
-POST_API_URL = "http://127.0.0.1:8000/predict/"
+from archive.utils import POST_API_URL
 
 
 st.set_page_config(
@@ -33,7 +30,7 @@ if input_choice == "Enter Text Review":
         review_text = st.text_area("✏️ Enter your review:", "", height=200)
 
         if st.button("🔎 Predict"):
-            input_data = [{"review": review_text}]
+            input_data = [{"review": review_text, "predict_type": "App"}]
             predict_and_display(api_url=POST_API_URL, input=input_data)
 
     else:
@@ -42,7 +39,7 @@ if input_choice == "Enter Text Review":
             generated_review = random.choice(random_reviews)
             review_text = st.text_area("Enter your review:", value=generated_review, height=200)
     
-            input_data = [{"review": review_text}]
+            input_data = [{"review": review_text, "predict_type": "App"}]
             predict_and_display(api_url=POST_API_URL, input=input_data)
             
 

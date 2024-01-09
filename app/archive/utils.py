@@ -2,6 +2,10 @@ from datetime import datetime
 import streamlit as st
 import requests
 
+# API endpoints
+POST_API_URL = "http://127.0.0.1:8000/predict/"
+GET_API_URL = "http://127.0.0.1:8000/get_filtered_predict/"
+
 # List of random reviews
 random_reviews = [
     "I couldn't believe I wasted hours on this book. It was excruciatingly dull, and the characters lacked depth. The plot felt disjointed, and I found myself struggling to finish it. I would strongly advise against reading this Kindle book.",
@@ -58,7 +62,6 @@ def predict_comment(score):
     # Display the comment based on the prediction score
     if score in comments:
         comment = comments[score]
-
         st.info(comment)  
     else:
         st.error("Invalid prediction score")
@@ -81,7 +84,7 @@ def predict_and_display(api_url, input):
 
 
 def predict_batch(api_url, review_texts):
-    input_data = [{"review": text} for text in review_texts]
+    input_data = [{"review": text, "predict_type": "App"} for text in review_texts]
     response = requests.post(url=api_url, json=input_data)
 
     if response.status_code == 200:

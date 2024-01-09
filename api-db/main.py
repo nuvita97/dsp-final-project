@@ -27,8 +27,9 @@ def predict(data: List[Rating]):
     for i in range(len(data)):
         review_text = data[i].review
         rating = int(ratings[i])
-        save_prediction(str(review_text), rating)
-        predictions.append({"review": review_text, "rating": rating})
+        predict_type = data[i].predict_type
+        save_prediction(str(review_text), rating, predict_type)
+        predictions.append({"review": review_text, "rating": rating, "predict_type": predict_type})
 
     return {"predictions": predictions}
 

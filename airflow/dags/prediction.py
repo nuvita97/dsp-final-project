@@ -10,9 +10,8 @@ from airflow.operators.python import ShortCircuitOperator
 from airflow.sensors.external_task import ExternalTaskSensor
 
 
-# POST_API_URL = "http://localhost:8000/predict/"
 POST_API_URL= "http://host.docker.internal:8000/predict/"
-GET_API_URL = "http://localhost:8000/get_predict/"
+
 
 @dag(
     dag_id='predict_data',
@@ -23,19 +22,6 @@ GET_API_URL = "http://localhost:8000/get_predict/"
     dagrun_timeout=timedelta(minutes=1)
 )
 def predict_every_minute_dag():
-
-    # check_for_files = ShortCircuitOperator(
-    #     task_id='check_for_files',
-    #     python_callable=check_for_new_files,
-    # )
-
-    # wait_for_new_files = FileSensor(
-    #     task_id='wait_for_new_files',
-    #     mode='reschedule',
-    #     timeout=600,  # Adjust as needed
-    #     filepath="data/folder_C",
-    #     soft_fail=True,  
-    # )
 
     @task()
     def merge_csv_files():
@@ -56,27 +42,14 @@ def predict_every_minute_dag():
     @task()
     def make_predictions(merged_df):
         review_texts = merged_df["reviewText"].tolist()
-        input_data = [{"review": text} for text in review_texts]
+        input_data = [{"review": text, "predict_type": "Job"} for text in review_texts]
         logging.info('Before calling API')
         response = requests.post(url=POST_API_URL, json=input_data)
         logging.info(f"FastAPI Response: {response.text}")
 
-    # @task
-    # def get_predictions():
-    #     response = requests.get(GET_API_URL)
-    #     columns_list = ["ID", "Review", "Rating Prediction", "Predict Time", "Predict Type"]
-    #     df = pd.DataFrame(response, columns=columns_list)
-    #     df.to_csv('data/folder_B/test_get_predict_files.csv')
-
 
     merged_df = merge_csv_files()
     make_predictions(merged_df)
-    # get_predictions()
 
-    # merged_df >> make_predictions_task
-    # wait_for_new_files >> merge_csv_files() >> save_data(merged_df)
 
-# Instantiate the DAG
 dag_instance = predict_every_minute_dag()
-
-

@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
-import requests
 from datetime import datetime, timedelta
 from archive.utils import convert_time_format, get_predictions
+from archive.utils import GET_API_URL
 
-
-# GET_API_URL = "http://127.0.0.1:8000/get_predict/"
-GET_API_URL = "http://127.0.0.1:8000/get_filtered_predict/"
 
 st.set_page_config(
     page_title="ML Legends",
@@ -60,3 +57,35 @@ if st.button("🖨️ Show History"):
     df["Predict Time"] = pd.to_datetime(df["Predict Time"])
 
     st.table(df)
+
+
+    # Add pagination
+
+    # top_menu = st.columns(3)
+    # with top_menu[0]:
+    #     sort = st.radio("Sort Data", options=["Yes", "No"], horizontal=1, index=1)
+    # if sort == "Yes":
+    #     with top_menu[1]:
+    #         sort_field = st.selectbox("Sort By", options=df.columns)
+    #     with top_menu[2]:
+    #         sort_direction = st.radio(
+    #             "Direction", options=["⬆️", "⬇️"], horizontal=True
+    #         )
+    #     dataset = df.sort_values(
+    #         by=sort_field, ascending=sort_direction == "⬆️", ignore_index=True
+    #     )
+
+    # pagination = st.container()
+
+    # bottom_menu = st.columns((4, 1, 1))
+    # with bottom_menu[2]:
+    #     batch_size = st.selectbox("Page Size", options=[25, 50, 100])
+    # with bottom_menu[1]:
+    #     total_pages = (
+    #         int(len(df) / batch_size) if int(len(df) / batch_size) > 0 else 1
+    #     )
+    #     current_page = st.number_input(
+    #         "Page", min_value=1, max_value=total_pages, step=1
+    #     )
+    # with bottom_menu[0]:
+    #     st.markdown(f"Page **{current_page}** of **{total_pages}** ")
