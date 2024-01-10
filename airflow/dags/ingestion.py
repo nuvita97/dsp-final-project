@@ -12,8 +12,8 @@ import psycopg2
 
 @dag(
     dag_id="ingest_data",
-    description="Validate data and split into 2 files",
-    tags=["dsp", "validate", "alert"],
+    description="Validate data and split into 2 folders",
+    tags=["dsp", "ingest", "validate", "alert"],
     schedule=timedelta(minutes=2),
     start_date=days_ago(n=0, hour=1)
     # catchup=False
@@ -52,10 +52,14 @@ def ingestion():
         for index, row in df.iterrows():
             row_df = pd.DataFrame([row])
             batch = ge.dataset.PandasDataset(row_df, expectation_suite=suite)
+            logging.info(batch.validate())
 
-            # If the row is not valid, set the value in the "validated" column to "null_data"
+            # If the row is not valid, set the Problem value in meta.desc
             if not batch.validate().success:
-                df.at[index, 'validated'] = 'null_data'
+                for valid_case in batch.validate().results:
+                    if not valid_case.success:
+                        df.at[index, 'validated'] = valid_case['expectation_config']['meta']['desc']
+                        break
 
         logging.info(df[['file_name', 'validated']])
 
@@ -69,8 +73,8 @@ def ingestion():
     @task
     def split_file(df):
         # Split the DataFrame into two new DataFrames
-        df_invalid = df[df['validated'] == 'null_data']
-        df_valid = df[df['validated'] != 'null_data']
+        df_invalid = df[df['validated'].str.len() > 0]
+        df_valid = df[df['validated'].str.len() == 0]
 
         # Get current time and date
         now = datetime.now()
@@ -83,7 +87,7 @@ def ingestion():
 
         # Save the DataFrame without null values to a CSV file in folder_C
         file_path_valid = f'/opt/data/folder_C/valid_{timestamp}.csv'
-        logging.info(f'Saving not null data to the file: {file_path_valid}')
+        logging.info(f'Saving valid data to the file: {file_path_valid}')
         df_valid.to_csv(file_path_valid, index=False)
 
         return df_invalid
@@ -92,6 +96,7 @@ def ingestion():
     @task
     def save_logs(df_invalid):
         for index, row in df_invalid.iterrows():
+            # Get the values from row df
             file_name = row['file_name']
             review_text = row['reviewText']
             problem = row['validated']
