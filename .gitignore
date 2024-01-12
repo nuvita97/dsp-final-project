@@ -11,7 +11,11 @@ data/
 **/.DS_Store
 
 # Airflow
+airflow/logs/
 airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/standalone_admin_password.txt
 
 # Distribution / packaging
 .Python

@@ -4,28 +4,31 @@ import logging
 import psycopg2
 
 
-def send_email_notification(sender, recipient, subject, message):
+def send_email_notification(sender, recipients, subject, message):
     # Create the message
     message = MIMEText(message)
     message["Subject"] = subject
     message["From"] = sender
-    message["To"] = recipient
+    message["To"] = recipients
+    # message["To"] = ", ".join(recipients)
 
     # Establish a connection with the SMTP server
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
         server.login("vietthai230397@gmail.com", "jrtt yohf xrig dcxi")
-        server.sendmail(sender, recipient, message.as_string())
+        server.sendmail(sender, recipients, message.as_string())
 
 
 def alert_user_by_email(df):
     sender = "vietthai230397@gmail.com"
-    recipient = "vietthai2303@gmail.com"
-    subject = "Data Quality Issues"
+    recipients = "viet-thai.nguyen@epita.fr"
+    # recipients = ["viet-thai.nguyen@epita.fr",
+                #   "stephanie-lynn-rule.arthaud@epita.fr"]
+    subject = "Alert: New Data Quality Issues !"
     message = f"{len(df)} issues detected. Check the logs for details."
     logging.info(message)
 
-    send_email_notification(sender, recipient, subject, message)
+    send_email_notification(sender, recipients, subject, message)
 
 
 def write_logs_to_db(index, row):
@@ -33,6 +36,7 @@ def write_logs_to_db(index, row):
     file_name = row['file_name']
     review_text = row['reviewText']
     problem = row['validated']
+
     # Write problematic logs to Postgres
     conn = psycopg2.connect("host=host.docker.internal port=5432 dbname=amazon-reviews user=postgres password=password")
     cur = conn.cursor()

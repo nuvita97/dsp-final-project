@@ -25,12 +25,13 @@ def ingestion():
 
     @task
     def read_file() -> pd.DataFrame:
-        input_path = '/opt/data/folder_A'
+        input_path = '/opt/data/folder_A/'
         file_pattern = os.path.join(input_path, '*.csv')
         # Randomly select a file path
         file_paths = glob.glob(file_pattern)
         file_path = random.choice(file_paths)
         logging.info(file_path)
+        file_path = '/opt/data/folder_A/0041_split_row_401_410.csv'
         df = pd.read_csv(file_path)
         df['file_name'] = os.path.basename(file_path)
         # Remove file
