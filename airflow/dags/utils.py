@@ -34,7 +34,7 @@ def alert_user_by_email(df):
     # problem_list = df['problem'].tolist()
     # problem_str = ', '.join(problem_list)
 
-    message = f"Alert: {len(df)} issues detected. \nFile: {file_name} \nCheck the Airflow logs of Grafana for details."
+    message = f"Alert: {len(df)} issues detected. \nFile: {file_name} \nCheck the Airflow logs or the Grafana dashboard for details."
     logging.info(message)
 
     send_email_notification(sender, recipients, subject, message)

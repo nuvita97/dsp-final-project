@@ -1,8 +1,8 @@
-# Data Science in Production: Final Project
+# Data Science in Production: Final Project - Kindle Book Reviews Application
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://10.41.173.71:8501)
 
-Welcome to the "Data Science in Production" project by Team “ML Legends”:
+Welcome to the "Data Science in Production" project by Team “ML Legends” - EPITA Master in Data Science:
 
 - Stephanie Arthaud
 - Abubakar Bashir Kankia
@@ -14,14 +14,17 @@ Welcome to the "Data Science in Production" project by Team “ML Legends”:
 
 Our project focuses on the Sentiment Analysis of Kindle Book Reviews, aiming to classify them as Positive or Negative by predicting Rating Score. We are utilizing the [Kindle Book Review Dataset](https://nijianmo.github.io/amazon/index.html#complete-data), a rich collection of over 2 million reviews and associated metadata for a diverse range of Kindle books.
 
-We have built a `Streamlit` web app for users to interact with the Machine Learning model through `FastAPI` and `PostgreSQL`
+We have built a `Streamlit` web app for users to interact with the Machine Learning model through `FastAPI` and `PostgreSQL`. Raw data is ingested and predicted by `Airflow` jobs, after being validated by `Great Expectations`. The pipeline is then monitored by a `Grafana` dashboard.
 
 ![Intro](images/app.png)
 
 ## File Descriptions
 
 ```
-├── images             # Store images for README
+├── airflow            # Airflow DAGs validated by Great Expectations
+│   ├── dags
+│   ├── logs
+│   └── gx
 ├── api-db             # Connect to PostgreSQL by FastAPI
 │   ├── main.py
 │   └── functions.py
@@ -33,6 +36,7 @@ We have built a `Streamlit` web app for users to interact with the Machine Learn
 │   ├── DSP_NLP_Review.ipynb
 │   ├── dsp_project_model.pkl
 │   └── dsp_project_tfidf_model.pkl
+├── images             # Store images for README
 ├── README.md
 ├── requirements.txt   # Modules version
 ├── .gitignore
@@ -82,6 +86,32 @@ To train the model, we used:
 - Linear Support Vector Machine (SVM)
 
 ![Model](images/model.png)
+
+### Jobs scheduling
+
+We created 2 DAGs in Airflow for 2 jobs:
+
+- `ingest_data`: Ingest new data, validate the data by using Great Expectations module, running each 1 min.
+- `predict_data`: Predict a batch of new coming data, running each 2 min.
+
+![Airflow](images/airflow.png)
+
+### Data Validation
+
+We used Great Expectations to validate raw data by 4 requirements:
+
+- The review cannot be null.
+- The review cannot be too long.
+- Spam review will not be accepted.
+- Do not allow the review having the direct URL.
+
+![GE](images/ge.png)
+
+### Data Monitoring
+
+By a Grafana dashboard, we can monitor all the data from Prediction and Ingestion jobs which is stored in PostgreSQL tables.
+
+![GE](images/grafana.png)
 
 ## Contributing
 
