@@ -8,9 +8,15 @@ __pycache__/
 
 # data for the dsp_project
 data/
-/data/
-/.DS_Store/
 **/.DS_Store
+stored/
+
+# Airflow
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/standalone_admin_password.txt
 
 # Distribution / packaging
 .Python

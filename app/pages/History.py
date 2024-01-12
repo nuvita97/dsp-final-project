@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
-import requests
 from datetime import datetime, timedelta
 from archive.utils import convert_time_format, get_predictions
+from archive.utils import GET_API_URL
 
-
-# GET_API_URL = "http://127.0.0.1:8000/get_predict/"
-GET_API_URL = "http://127.0.0.1:8000/get_filtered_predict/"
 
 st.set_page_config(
     page_title="ML Legends",
@@ -59,4 +56,4 @@ if st.button("🖨️ Show History"):
     df["Predict Time"] = df["Predict Time"].apply(convert_time_format)
     df["Predict Time"] = pd.to_datetime(df["Predict Time"])
 
-    st.table(df)
+    st.dataframe(df, use_container_width=True)
