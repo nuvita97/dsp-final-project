@@ -9,6 +9,7 @@ __pycache__/
 # data for the dsp_project
 data/
 **/.DS_Store
+stored/
 
 # Airflow
 airflow/logs/

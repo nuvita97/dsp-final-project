@@ -9,8 +9,8 @@ def send_email_notification(sender, recipients, subject, message):
     message = MIMEText(message)
     message["Subject"] = subject
     message["From"] = sender
-    message["To"] = recipients
-    # message["To"] = ", ".join(recipients)
+    # message["To"] = recipients
+    message["To"] = ", ".join(recipients)
 
     # Establish a connection with the SMTP server
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
@@ -21,11 +21,20 @@ def send_email_notification(sender, recipients, subject, message):
 
 def alert_user_by_email(df):
     sender = "vietthai230397@gmail.com"
-    recipients = "viet-thai.nguyen@epita.fr"
-    # recipients = ["viet-thai.nguyen@epita.fr",
-                #   "stephanie-lynn-rule.arthaud@epita.fr"]
+    # recipients = "viet-thai.nguyen@epita.fr"
+    recipients = ["viet-thai.nguyen@epita.fr",
+                  "stephanie-lynn-rule.arthaud@epita.fr",
+                  "olanrewaju.adegoke@epita.fr",
+                  "christian-davison.dirisu@epita.fr",
+                  "abubakar-bashir.kankia@epita.fr"]
     subject = "Alert: New Data Quality Issues !"
-    message = f"{len(df)} issues detected. Check the logs for details."
+
+    # Get a string of all problems
+    file_name = df['file_name'].iloc[0]
+    # problem_list = df['problem'].tolist()
+    # problem_str = ', '.join(problem_list)
+
+    message = f"Alert: {len(df)} issues detected. \nFile: {file_name} \nCheck the Airflow logs of Grafana for details."
     logging.info(message)
 
     send_email_notification(sender, recipients, subject, message)
