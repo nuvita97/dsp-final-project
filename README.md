@@ -2,23 +2,25 @@
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://10.41.173.71:8501)
 
-Welcome to the "Data Science in Production" project by Team “ML Legends” - EPITA Master in Data Science:
+Welcome to the "Data Science in Production" project by Team “ML Legends” - EPITA Master in Data Science
 
-- Stephanie Arthaud
-- Abubakar Bashir Kankia
-- Olanrewaju Adegoke
-- Christian Davison Dirisu
+### Collaborators
+
 - Viet Thai Nguyen
+- Stephanie Arthaud
+- Christian Davison Dirisu
+- Olanrewaju Adegoke
+- Abubakar Bashir Kankia
 
-## Introduction
+# Introduction
 
 Our project focuses on the Sentiment Analysis of Kindle Book Reviews, aiming to classify them as Positive or Negative by predicting Rating Score. We are utilizing the [Kindle Book Review Dataset](https://nijianmo.github.io/amazon/index.html#complete-data), a rich collection of over 2 million reviews and associated metadata for a diverse range of Kindle books.
 
 We have built a `Streamlit` web app for users to interact with the Machine Learning model through `FastAPI` and `PostgreSQL`. Raw data is ingested and predicted by `Airflow` jobs, after being validated by `Great Expectations`. The pipeline is then monitored by a `Grafana` dashboard.
 
-![Intro](images/app.png)
+![Intro](images/architecture.png)
 
-## File Descriptions
+# File Descriptions
 
 ```
 ├── airflow            # Airflow DAGs validated by Great Expectations
@@ -42,9 +44,9 @@ We have built a `Streamlit` web app for users to interact with the Machine Learn
 ├── .gitignore
 ```
 
-## Main components
+# Main components
 
-### Web app
+## Web app
 
 There are 2 pages of the app:
 
@@ -54,10 +56,10 @@ There are 2 pages of the app:
   - Upload a CSV
 - `History`: showing all rows in database that can be filtered by time and other types.
 
-![Predict](images/predict.png)
+![Predict](images/app.png)
 ![History](images/history.png)
 
-### API
+## API
 
 We implemented 2 endpoints by FastAPI:
 
@@ -66,7 +68,7 @@ We implemented 2 endpoints by FastAPI:
 
 ![API](images/api.png)
 
-### Database
+## Database
 
 We used PostgreSQL with table including 4 columns:
 
@@ -78,16 +80,7 @@ We used PostgreSQL with table including 4 columns:
 
 ![DB](images/db.png)
 
-### Modelling
-
-To train the model, we used:
-
-- Term Frequency - Inverse Document Frequency (TFIDF)
-- Linear Support Vector Machine (SVM)
-
-![Model](images/model.png)
-
-### Jobs scheduling
+## Jobs scheduling
 
 We created 2 DAGs in Airflow for 2 jobs:
 
@@ -96,7 +89,7 @@ We created 2 DAGs in Airflow for 2 jobs:
 
 ![Airflow](images/airflow.png)
 
-### Data Validation
+## Data Validation
 
 We used Great Expectations to validate raw data by 4 requirements:
 
@@ -107,13 +100,58 @@ We used Great Expectations to validate raw data by 4 requirements:
 
 ![GE](images/ge.png)
 
-### Data Monitoring
+## Data Monitoring
 
 By a Grafana dashboard, we can monitor all the data from Prediction and Ingestion jobs which is stored in PostgreSQL tables.
 
-![GE](images/grafana.png)
+![Grafana](images/grafana.png)
 
-## Contributing
+# Installation & Setup
+
+## Initial Installation
+
+**1. Install project dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+**2. Install Docker and Docker Compose** (Docker Desktop is additional)
+
+**3. Build Docker image and start services**
+
+```commandline
+cd airflow
+docker build -f Dockerfile -t {name_of_the_image}:latest .
+docker-compose -f "docker-compose.yml" up -d --build
+```
+
+## Running Steps
+
+**1. Run FastAPI server**
+
+```commandline
+cd api-db
+uvicorn main:app --reload
+```
+
+- Access `localhost:8000`
+
+**2. Run Streamlit webapp**
+
+```commandline
+cd app
+streamlit run Predict.py
+```
+
+- Access `localhost:8501`
+
+**3. Run Airflow webserver**
+
+- Access `localhost:8080`
+- Login by using username `admin`, and retrieve password from the `standalone_admin_password.txt` file.
+
+# Contributing
 
 We welcome contributions to this project! Here's how you can contribute:
 
